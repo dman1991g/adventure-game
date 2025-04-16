@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Click to Start</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    #player {
+      display: none;
+    }
+  </style>
+</head>
+<body onclick="startPrank()">
+  <div id="message">Click anywhere to begin</div>
+  <div id="player"></div>
+
+  <script>
+    let player;
+
+    function startPrank() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) {
+        el.requestFullscreen();
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
+      }
+
+      document.getElementById('message').style.display = 'none';
+      document.getElementById('player').style.display = 'block';
+      player.playVideo();
+      document.body.onclick = null;
+    }
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        videoId: '_SLsFjhScqc',
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          showinfo: 0,
+          modestbranding: 1,
+          fs: 1,
+          rel: 0
+        },
+        events: {
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      // 0 means video ended
+      if (event.data === 0) {
+        if (document.fullscreenElement) {
+          document.exitFullscreen?.();
+        }
+      }
+    }
+
+    // Load the YouTube IFrame Player API
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+  </script>
+</body>
+</html>
